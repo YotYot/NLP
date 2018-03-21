@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def softmax(x):
     """Compute the softmax function for each row of the input x.
 
@@ -29,16 +28,33 @@ def softmax(x):
     orig_shape = x.shape
 
     if len(x.shape) > 1:
-        # Matrix
+        ### Matrix
         ### YOUR CODE HERE
-        raise NotImplementedError
+        x_max = np.max(x, axis=1)
+        x_trans = np.transpose(x)
+        x_max_trans = np.transpose(x_max)
+        x_norm_trans = x_trans - x_max_trans
+        x_norm = np.transpose(x_norm_trans)
+        x_exp = np.exp(x_norm)
+        x_sum = np.sum(x_exp, axis=1)
+        res = x_exp / x_sum
+
+        # x_max_matrix = np.broadcast(x_max,N)
+        # x_norm = x - x_max
+        # x_exp = np.exp(x_norm)
+        # x_sum = np.sum(x_exp)
+        # res = float(x_exp) / x_sum
         ### END YOUR CODE
     else:
         # Vector
         ### YOUR CODE HERE
-        raise NotImplementedError
+        x_max = np.max(x)
+        x_norm = x - x_max
+        x_exp = np.exp(x_norm)
+        x_sum = np.sum(x_exp)
+        res = x_exp / x_sum
         ### END YOUR CODE
-
+    x = res
     assert x.shape == orig_shape
     return x
 
@@ -78,7 +94,15 @@ def test_softmax():
     """
     print "Running your tests..."
     ### YOUR CODE HERE
-    raise NotImplementedError
+    test4 = softmax(np.array([[0, 0]]))
+    print test4
+    ans4 = np.array([0.5, 0.5])
+    assert np.allclose(test4, ans4, rtol=1e-05, atol=1e-06)
+
+    test5 = softmax(np.ndarray(dtype=int, shape=(1, 5), buffer=np.array([1, 2, 3, 4, 5])))
+    print test5
+    ans5 = np.array([0.01165623,  0.03168492,  0.08612854,  0.23412166,  0.63640865])
+    assert np.allclose(test5, ans5, rtol=1e-05, atol=1e-06)
     ### END YOUR CODE
 
 
